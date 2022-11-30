@@ -14,10 +14,10 @@ from random import randint, choices, choice, random
 import matplotlib.pyplot as plt
 import time
 
-def return_duplicate_index(list):
+def return_duplicate_index(l):
     """#returns index of all duplicates except for 0-duplicates, input: list"""
     dup = {}
-    for i,x in enumerate(list):
+    for i,x in enumerate(l):
         dup.setdefault(x,[]).append(i)
     duplicate_index = [x for i,x in dup.items() if len(x) > 1 and i > 0]
     return duplicate_index
@@ -62,7 +62,7 @@ def fitness_function(puzzle, fixed_indices):
 
 def create_child(father, mother):
     """Create matrix from father and mother"""
-    father, mother = np.array(father), np.array(mother)
+    #father, mother = np.array(father), np.array(mother)
     child = father.copy()
     for i,j in np.ndindex((child.shape)):
         if randint(0,1) == 1:
@@ -115,14 +115,14 @@ def sudokuGA(puzzle):
     puzzle = np.array(puzzle)
     fitness_over_time = []
     population_size = 20000
-    selection_rate = 0.20
-    random_selection_rate = 0.10
+    selection_rate = 0.2
+    random_selection_rate = 0.1
     number_of_children = float("NaN") #redundat variable, determinded by selection_rate and random_selection_rate
     #((selection_rate + random_selection_rate)/ 2) * number_of_children = 1
-    max_generations = 300
+    max_generations = 1000
     individual_mutation_rate = 0.45
     cell_mutation_rate = 0.005
-    restart_after_n_generations = 25
+    restart_after_n_generations = 20
    
     current_generation = create_ancestors(puzzle, population_size)   
     
@@ -258,7 +258,7 @@ solution_easy = [
 found_solution_easy = [
                 [5,3,4,6,7,8,9,1,2],
                 [6,7,2,1,9,5,3,4,8],
-                [1,9,8,0,4,2,5,6,7],
+                [1,9,8,3,4,2,5,6,7],
                 [8,5,9,7,6,1,4,2,3],
                 [4,2,6,8,5,3,7,9,1],
                 [7,1,3,9,2,4,8,5,6],
@@ -279,4 +279,15 @@ testmatrix = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
-print(sudokuGA(easy))
+test_unknown = [
+            [5,1,7,6,0,0,0,3,4],
+            [2,8,9,0,0,4,0,0,0],
+            [3,4,6,2,0,5,0,9,0],
+            [6,0,2,0,0,0,0,1,0],
+            [0,3,8,0,0,6,0,4,7],
+            [0,0,0,0,0,0,0,0,0],
+            [0,9,0,0,0,0,0,7,8],
+            [7,0,3,4,0,0,5,6,0],
+            [0,0,0,0,0,0,0,0,0]]
+
+print(sudokuGA(test_unknown))
