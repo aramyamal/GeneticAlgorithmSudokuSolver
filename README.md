@@ -42,7 +42,7 @@ the parameters above.
 
 https://user-images.githubusercontent.com/116388893/235634335-00561fae-b327-4eb1-9f51-0c79d8440d2e.mp4
 
-The following solution was printed in conjunction with the previous example:
+The following solution was printed in conjunction with the previous continous graph:
 ```
 [[5 3 4 6 7 8 9 1 2]
  [6 7 2 1 9 5 3 4 8]
@@ -53,4 +53,20 @@ The following solution was printed in conjunction with the previous example:
  [9 6 1 5 3 7 2 8 4]
  [2 8 7 4 1 9 6 3 5]
  [3 4 5 2 8 6 1 7 9]]
+```
+where the preloaded easy sudoku input was
+```
+easy = [
+        [5,3,0,0,7,0,0,0,0],
+        [6,0,0,1,9,5,0,0,0],
+        [0,9,8,0,0,0,0,6,0],
+        [8,0,0,0,6,0,0,0,3],
+        [4,0,0,8,0,3,0,0,1],
+        [7,0,0,0,2,0,0,0,6],
+        [0,6,0,0,0,0,2,8,0],
+        [0,0,0,4,1,9,0,0,5],
+        [0,0,0,0,8,0,0,7,9]
+        ]
+        
+ga.sudokuGA(easy, show_continous_plot=True, show_final_plot=True, print_final_board=True)
 ```
