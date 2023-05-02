@@ -50,19 +50,18 @@ def sudoku_validifier(puzzle):
     return duplicate_indices
 
 def remove_fixed_indices(badboard, fixedboard):   
-    """Removes fixed indices from list. fix = list of fixed indices as '[(2,5), (3,7), ...].
-        bad = list of new boardnumbers as [(3,7,9), (2,5,9), ...]
+    """Removes fixed indices from list. fixedboard = list of fixed indices as '[(2,5), (3,7), ...].
+        badboard = list of new boardnumbers as [(3,7,9), (2,5,9), ...]
         where first two integers are indices and third is their number
     """                                  
     return [badboard[x] for x in range(len(badboard)) if badboard[x][:-1] not in fixedboard]  
 
 def fitness_function(puzzle, fixed_indices):
-    """number of duplicates without the fixed numbers"""
+    """returns number of duplicates without the fixed numbers"""
     return len(remove_fixed_indices(sudoku_validifier(puzzle), fixed_indices))
 
 def create_child(father, mother):
     """Create matrix from father and mother"""
-    #father, mother = np.array(father), np.array(mother)
     child = father.copy()
     for i,j in np.ndindex((child.shape)):
         if randint(0,1) == 1:
@@ -84,7 +83,7 @@ def create_ancestors(puzzle, population_size):
 def plot(ylist, population_size, selection_rate, random_selection_rate,
          individual_mutation_rate, cell_mutation_rate, best_fitness, time=0):
     """Plot fitness over time with labeled parameters"""
-    xlist = range(len(ylist))
+    xlist = range(1, len(ylist) + 1)
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax.plot(xlist, ylist)
@@ -102,15 +101,47 @@ def plot(ylist, population_size, selection_rate, random_selection_rate,
             Best fitness = {best_fitness} \n \
             Elapsed time: {time:0.1f} s"
     
-    plt.figtext(0.49, 0.59,
+    plt.figtext(0.15, 0.15,
                 text,
                 horizontalalignment ="left",
                 wrap = False, fontsize = 8,
                 bbox ={'facecolor':'white', 'alpha':0.3, 'pad':5})
     plt.show()
 
-def sudokuGA(puzzle):
+def continous_plot(ylist, population_size, selection_rate, random_selection_rate,
+         individual_mutation_rate, cell_mutation_rate, best_fitness, time=0, current_best_fitness=0, current_local_minima_loop=0):
+    """Plot fitness over time with labeled parameters"""
+    xlist = range(1, len(ylist) + 1)
+    plt.plot(xlist, ylist)
+    plt.xlabel('generation')
+    plt.ylabel('current best fitness')
+    plt.ylim(0, 120)
+    
+    text = f"Current model: \n \
+            Population size: {population_size} \n \
+            Selection rate: {selection_rate} \n \
+            Random selection rate: {random_selection_rate} \n \
+            Individual mutation rate: {individual_mutation_rate} \n \
+            Cell mutation rate: {cell_mutation_rate} \n \
+            Number of children: {1/((selection_rate + random_selection_rate)/ 2):0.2f} \n \
+            Best fitness overall = {best_fitness} \n \
+            Current best fitness = {current_best_fitness} \n \
+            Current local minima loop = {current_local_minima_loop} \n \
+            Elapsed time: {time:0.1f} s"
+    
+    plt.figtext(0.15, 0.15,
+                text,
+                horizontalalignment ="left",
+                wrap = False, fontsize = 8,
+                bbox ={'facecolor':'white', 'alpha':0.3, 'pad':5})
+    plt.pause(0.1)
+    plt.clf()
+
+def sudokuGA(puzzle, show_continous_plot=False, show_final_plot=False, print_final_board=False):
     start_time = time.time()
+
+    if show_continous_plot == True:
+        plt.ion()
 
     puzzle = np.array(puzzle)
     fitness_over_time = []
@@ -143,15 +174,13 @@ def sudokuGA(puzzle):
     while count < max_generations and found_solution == False:
         next_generation = []
 
-        #2.80 seconds
         fitness_list = [fitness_function(individual, fixed_indices) for individual in current_generation]
         fitness_list_indices = np.argsort(fitness_list, kind='heapsort')
         fitness_over_time.append(fitness_list[fitness_list_indices[0]]) #append for plot
         
         if fitness_over_time[-1] == 0:
-            print("solution found")
-            found_solution = True
             solution.append(current_generation[fitness_list_indices[0]])
+            found_solution = True
 
         if fitness_over_time[-1] == min(fitness_over_time):
             best_solution = current_generation[fitness_list_indices[0]]
@@ -162,21 +191,11 @@ def sudokuGA(puzzle):
         #add randomly to next generation      
         next_generation += choices(current_generation, k = new_random_selection_rate)
 
-        #0.95 seconds
         next_generation_children = []
         for child in range(children):   #add children to next generation
             next_generation_children.append(create_child(choice(next_generation), choice(next_generation)))
         next_generation += next_generation_children
 
-        # #0.02 seconds #alternate faster mutation algorithm
-        # for individual in next_generation:  #mutate next generation
-        #     if random() < individual_mutation_rate:
-        #         mutated_cell_index = (randint(0,8), randint(0,8))
-        #         if mutated_cell_index not in fixed_indices:
-        #             individual[mutated_cell_index] = randint(1,9)
-        #             mutated_cells_count +=1
-
-        #0.49 seconds
         for individual in next_generation:  #mutate next generation
             if random() < individual_mutation_rate:
                 for i,j in np.ndindex((9,9)):
@@ -200,94 +219,24 @@ def sudokuGA(puzzle):
         print(f"current generation: {count} \
                 \t current best fitness: {fitness_over_time[-1]} \
                 \t current median fitness: {fitness_list[fitness_list_indices[population_size//2]]}")
+        
+        if show_continous_plot == True:
+            continous_plot(fitness_over_time, population_size, selection_rate, random_selection_rate,
+            individual_mutation_rate, cell_mutation_rate, min(fitness_over_time), (time.time()-start_time), fitness_over_time[-1], local_minima_loop)
+    
+    if found_solution == True:
+        print("solution found")
+    else:
+        print("no solution found, printing best solution")
 
-    end_time = time.time()       
-    plot(fitness_over_time, population_size, selection_rate, random_selection_rate,
-          individual_mutation_rate, cell_mutation_rate, min(fitness_over_time), (end_time-start_time))
+    if print_final_board == True:
+        print(best_solution if found_solution == False else np.array(solution[0]))
+
+    if show_final_plot == True:
+        plt.close('all')
+        plt.ioff()
+        end_time = time.time() 
+        plot(fitness_over_time, population_size, selection_rate, random_selection_rate,
+            individual_mutation_rate, cell_mutation_rate, min(fitness_over_time), (end_time-start_time))
     
     return best_solution if found_solution == False else solution
-
-hard = [
-            [0, 0, 6, 1, 0, 0, 0, 0, 8], 
-            [0, 8, 0, 0, 9, 0, 0, 3, 0], 
-            [2, 0, 0, 0, 0, 5, 4, 0, 0], 
-            [4, 0, 0, 0, 0, 1, 8, 0, 0], 
-            [0, 3, 0, 0, 7, 0, 0, 4, 0], 
-            [0, 0, 7, 9, 0, 0, 0, 0, 3], 
-            [0, 0, 8, 4, 0, 0, 0, 0, 6], 
-            [0, 2, 0, 0, 5, 0, 0, 8, 0], 
-            [1, 0, 0, 0, 0, 2, 5, 0, 0]
-        ]
-
-hard_solution = [
-            [3, 4, 6, 1, 2, 7, 9, 5, 8], 
-            [7, 8, 5, 6, 9, 4, 1, 3, 2], 
-            [2, 1, 9, 3, 8, 5, 4, 6, 7], 
-            [4, 6, 2, 5, 3, 1, 8, 7, 9], 
-            [9, 3, 1, 2, 7, 8, 6, 4, 5], 
-            [8, 5, 7, 9, 4, 6, 2, 1, 3], 
-            [5, 9, 8, 4, 1, 3, 7, 2, 6],
-            [6, 2, 4, 7, 5, 9, 3, 8, 1],
-            [1, 7, 3, 8, 6, 2, 5, 9, 4]
-        ]
-
-easy = [
-                [5,3,0,0,7,0,0,0,0],
-                [6,0,0,1,9,5,0,0,0],
-                [0,9,8,0,0,0,0,6,0],
-                [8,0,0,0,6,0,0,0,3],
-                [4,0,0,8,0,3,0,0,1],
-                [7,0,0,0,2,0,0,0,6],
-                [0,6,0,0,0,0,2,8,0],
-                [0,0,0,4,1,9,0,0,5],
-                [0,0,0,0,8,0,0,7,9]
-            ]
-
-solution_easy = [
-                [5,3,4,6,7,8,9,1,2],
-                [6,7,2,1,9,5,3,4,8],
-                [1,9,8,3,4,2,5,6,7],
-                [8,5,9,7,6,1,4,2,3],
-                [4,2,6,8,5,3,7,9,1],
-                [7,1,3,9,2,4,8,5,6],
-                [9,6,1,5,3,7,2,8,4],
-                [2,8,7,4,1,9,6,3,5],
-                [3,4,5,2,8,6,1,7,9]
-                ]
-
-found_solution_easy = [
-                [5,3,4,6,7,8,9,1,2],
-                [6,7,2,1,9,5,3,4,8],
-                [1,9,8,3,4,2,5,6,7],
-                [8,5,9,7,6,1,4,2,3],
-                [4,2,6,8,5,3,7,9,1],
-                [7,1,3,9,2,4,8,5,6],
-                [9,6,1,5,3,7,2,8,4],
-                [2,8,7,4,1,9,6,3,5],
-                [3,4,5,2,8,6,1,7,9]
-                ]
-
-testmatrix = [
-            [1, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0], 
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]
-
-test_unknown = [
-            [5,1,7,6,0,0,0,3,4],
-            [2,8,9,0,0,4,0,0,0],
-            [3,4,6,2,0,5,0,9,0],
-            [6,0,2,0,0,0,0,1,0],
-            [0,3,8,0,0,6,0,4,7],
-            [0,0,0,0,0,0,0,0,0],
-            [0,9,0,0,0,0,0,7,8],
-            [7,0,3,4,0,0,5,6,0],
-            [0,0,0,0,0,0,0,0,0]]
-
-print(sudokuGA(test_unknown))
