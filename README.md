@@ -23,7 +23,7 @@ or/and see a final plot when the algorithm has stopped running. In both plots th
 ga.sudokuGA(sudoku_examples.easy, show_continous_plot=True, show_final_plot=True, print_final_board=True)
 ```
 
-If you wish to change the parameters you can do so in the definition of the sudokuGa funtion in GeneticAlgorithmSudokuSolver.py.
+If you wish to change the parameters you can do so in the definition of the sudokuGA funtion in GeneticAlgorithmSudokuSolver.py.
 The following are the standard parameters I have found to work best for me, but of course there is ample room for improvement so feel free
 to change them.
 
