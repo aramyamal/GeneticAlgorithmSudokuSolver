@@ -16,7 +16,7 @@ until a solution is found or the maximum number of generations is reached
 
 In the main.py file, input the sudoku board you wish to be solved as a 9x9 array in the ga.sudokuGA() fuction.
 Note that two example boards are already included in the sudoku_examples.py file, one easy and one hard, along with their respective solutions. 
-You can also choose to see a continous plot of the best fitness or/and see a final plot when the algorithm has stopped running. 
+You can also choose to see a continous plot of the best fitness or/and see a final plot when running the algorithm. 
 In both plots the parameters for the algorithm is included.
 
 ```
