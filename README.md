@@ -38,11 +38,11 @@ restart_after_n_generations = 20
 ```
 
 The following video shows a timelapse of the continous plot when solving the preloaded easy sudoku board with
-the parameters above.
+the parameters above,
 
 https://user-images.githubusercontent.com/116388893/235634335-00561fae-b327-4eb1-9f51-0c79d8440d2e.mp4
 
-The following solution was printed in conjunction with the previous continous graph:
+where the following solution was printed:
 ```
 [[5 3 4 6 7 8 9 1 2]
  [6 7 2 1 9 5 3 4 8]
@@ -54,7 +54,7 @@ The following solution was printed in conjunction with the previous continous gr
  [2 8 7 4 1 9 6 3 5]
  [3 4 5 2 8 6 1 7 9]]
 ```
-where the preloaded easy sudoku input was
+and the preloaded easy sudoku input was
 ```
 easy = [
         [5,3,0,0,7,0,0,0,0],
