@@ -51,21 +51,47 @@ class SudokuMethods:
     def get_empty_indices(self, puzzle: NDArray[np.int_]) -> NDArray[np.int_]:
         """return all empty indices in a sudoku array"""
         return np.argwhere(puzzle == 0)
+    
+    def get_fixed_indices(self, unmodified_puzzle: NDArray[np.int_]) -> NDArray[np.int_]:
+        """return all fixed indices in an umodified sudoku array"""
+        return np.argwhere(unmodified_puzzle != 0)
+    
+    def remove_fixed_indices_from_incorrect_indices(self, incorrect_indices: NDArray[np.int_], fixed_indices: NDArray[np.int_]) -> NDArray[np.int_]:
+        """remove fixed indices from incorrect indices"""
+        # Create a boolean array of shape (len(incorrect_indices), len(fixed_indices))
+        # Each entry is True if the row in incorrect_indices matches a row in fixed_indices
+        mask = (incorrect_indices[:, None] == fixed_indices).all(-1)
+        
+        # Check if any True exists in each row; if True, then it matches and should be excluded
+        filter_mask = ~mask.any(1)
+        
+        # Return the rows in incorrect_indices that do not match any row in fixed_indices
+        return incorrect_indices[filter_mask]
+    
+    def generic_loss_function(self, puzzle: NDArray[np.int_], fixed_indices: NDArray[np.int_]) -> int:
+        """generic loss function for sudoku puzzle that checks for number of incorrect indices in a puzzle"""
+        incorrect_indices = self.get_incorrect_indices(puzzle)
+        incorrect_indices = self.remove_fixed_indices_from_incorrect_indices(incorrect_indices, fixed_indices)
+        return len(incorrect_indices)
 
-if __name__ == '__main__':
-    from GeneticAlgorithmSudokuSolver import sudoku_validifier
+# if __name__ == '__main__':
 
-    puzzle = np.array([
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [6, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9]
-])
+#     puzzle = np.array([
+#     [5, 3, 0, 0, 7, 0, 0, 0, 0],
+#     [6, 0, 0, 1, 9, 5, 0, 0, 0],
+#     [6, 9, 8, 0, 0, 0, 0, 6, 0],
+#     [8, 0, 0, 0, 6, 0, 0, 0, 3],
+#     [4, 0, 0, 8, 0, 3, 0, 0, 1],
+#     [7, 0, 0, 0, 2, 0, 0, 0, 6],
+#     [0, 6, 0, 0, 0, 0, 2, 8, 0],
+#     [0, 0, 0, 4, 1, 9, 0, 0, 5],
+#     [0, 0, 0, 0, 8, 0, 0, 7, 9]
+# ])
 
-helper = SudokuMethods()
-print(helper.get_empty_indices(puzzle))
+# helper = SudokuMethods()
+# incorrect_indices = np.array([[0, 1], [1, 2], [3, 4], [9,3]])
+# fixed_indices = np.array([[1, 2], [3, 4]])
+
+# result = helper.remove_fixed_indices_from_incorrect_indices(incorrect_indices, fixed_indices)
+# print("Filtered incorrect indices:", result)
+
