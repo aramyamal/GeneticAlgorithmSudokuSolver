@@ -1,29 +1,37 @@
 import numpy as np
 from numpy.typing import NDArray
 import typing
-from random import randint, choices, choice, random
+import time
 
 class SudokuMethods:
     def __init__(self):
         pass
 
-    def get_duplicate_indices_1d(self, array: NDArray[np.int_]
-                               = np.empty((9,))) -> NDArray[np.int_]:
-        """returns the indices of the integer duplicates in a 1d array except for those of zeros"""
+    def get_duplicate_indices_1d(self, array: NDArray[np.int_]) -> NDArray[np.int_]:
+        """Returns the indices of all integer duplicates in a 1D array, including those of zeros."""
 
-        # Filter out zeros and get indices of non-zero elements
-        non_zero_indices = np.nonzero(array)[0]
-        non_zero_values = array[non_zero_indices]
-        
-        # Find unique values and their first occurrence indices
-        unique_values, index, counts = np.unique(non_zero_values, return_index=True, return_counts=True)
+        if array.size == 0:
+            return np.array([])
 
-        # Mask to find values occurring more than once
+        # Get indices of all elements (including zeros)
+        indices = np.arange(array.size)
+
+        # Calculate unique values and their inverse to reconstruct original array from unique values
+        unique_values, inverse_indices = np.unique(array, return_inverse=True)
+
+        # Use bincount to count occurrences of each unique value in the array
+        counts = np.bincount(inverse_indices)
+
+        # Find which unique values have duplicates
         duplicates_mask = counts > 1
-        
-        # Get indices of all occurrences of duplicate values
-        duplicate_values = unique_values[duplicates_mask]
-        return non_zero_indices[np.isin(non_zero_values, duplicate_values)]
+
+        # Use duplicates_mask to filter out unique indices that have more than one occurrence
+        # Using inverse_indices helps us avoid using np.isin and directly obtain results
+        duplicate_indices_mask = duplicates_mask[inverse_indices]
+
+        # Return indices of duplicates directly
+        return indices[duplicate_indices_mask]
+
 
     def get_incorrect_indices(self, puzzle: NDArray[np.int_]) -> NDArray[np.int_]:
         """return all incorrect indices in a sudoku array"""
@@ -67,14 +75,36 @@ class SudokuMethods:
         
         # Return the rows in incorrect_indices that do not match any row in fixed_indices
         return incorrect_indices[filter_mask]
+        # if incorrect_indices.size == 0:
+        #     return np.array([], dtype=int)
+        # else:
+        #     mask = (incorrect_indices[:, None] == fixed_indices).all(-1)
+        #     filter_mask = ~mask.any(axis=1)
+        #     return incorrect_indices[filter_mask]
     
     def generic_loss_function(self, puzzle: NDArray[np.int_], fixed_indices: NDArray[np.int_]) -> int:
         """generic loss function for sudoku puzzle that checks for number of incorrect indices in a puzzle"""
         incorrect_indices = self.get_incorrect_indices(puzzle)
         incorrect_indices = self.remove_fixed_indices_from_incorrect_indices(incorrect_indices, fixed_indices)
-        return len(incorrect_indices)
+        return incorrect_indices.shape[0]
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    puzzle = np.array([
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 6, 0, 0],
+    [0, 9, 8, 0, 6, 0, 6, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9]
+])
+
+    helper = SudokuMethods()
+
+    print(helper.get_duplicate_indices_1d(np.array([0, 1, 2 ,4, 4, 2])))
+    print(helper.get_duplicate_indices_1d_basic(np.array([0, 1, 2 ,4, 4, 2])))
 
 #     puzzle = np.array([
 #     [5, 3, 0, 0, 7, 0, 0, 0, 0],

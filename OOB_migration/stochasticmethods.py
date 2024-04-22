@@ -24,7 +24,7 @@ class StochasticMethods(SudokuMethods):
         plt.title(f'{ylabel} vs {xlabel}')
 
         if kwargs:
-            text = [f'{key}: {value}' for key, value in kwargs.items()]
+            text = [f'{key}: {value:.2f}' for key, value in kwargs.items()]
             text = '\n'.join(text)
 
             plt.figtext(0.15, 0.15,
@@ -42,7 +42,7 @@ class StochasticMethods(SudokuMethods):
         plt.title(f'{ylabel} vs {xlabel}')
 
         if kwargs:
-            text = [f'{key}: {value}' for key, value in kwargs.items()]
+            text = [f'{key}: {value:.2f}' for key, value in kwargs.items()]
             text = '\n'.join(text)
 
             plt.figtext(0.15, 0.15,
@@ -50,7 +50,7 @@ class StochasticMethods(SudokuMethods):
                         horizontalalignment='left',
                         wrap=False, fontsize=8,
                         bbox ={'facecolor':'white', 'alpha':0.3, 'pad':5})
-        plt.pause(0.1)
+        plt.pause(0.001)
         plt.clf()
     
 

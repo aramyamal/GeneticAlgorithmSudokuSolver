@@ -145,7 +145,7 @@ def sudokuGA(puzzle, show_continous_plot=False, show_final_plot=False, print_fin
 
     puzzle = np.array(puzzle)
     fitness_over_time = []
-    population_size = 20000
+    population_size = 100
     selection_rate = 0.2
     random_selection_rate = 0.1
     number_of_children = float("NaN") #redundat variable, determinded by selection_rate and random_selection_rate
@@ -221,8 +221,16 @@ def sudokuGA(puzzle, show_continous_plot=False, show_final_plot=False, print_fin
                 \t current median fitness: {fitness_list[fitness_list_indices[population_size//2]]}")
         
         if show_continous_plot == True:
-            continous_plot(fitness_over_time, population_size, selection_rate, random_selection_rate,
-            individual_mutation_rate, cell_mutation_rate, min(fitness_over_time), (time.time()-start_time), fitness_over_time[-1], local_minima_loop)
+            continous_plot(fitness_over_time, 
+                            population_size, 
+                            selection_rate, 
+                            random_selection_rate,
+                            individual_mutation_rate, 
+                            cell_mutation_rate, 
+                            min(fitness_over_time), 
+                            (time.time()-start_time), 
+                            fitness_over_time[-1], 
+                            local_minima_loop)
     
     if found_solution == True:
         print("solution found")
