@@ -36,7 +36,7 @@ puzzle = np.array([
 ga(puzzle, show_live_plot=True)
 ```
 
-The parameters for the algorithm can be changes in the init.
+The parameters for the algorithm can be changed in the init.
 The following parameters are the ones I have found to work best.
 
 ```
