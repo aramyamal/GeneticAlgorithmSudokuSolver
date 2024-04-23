@@ -14,27 +14,39 @@ repeat
 until a solution is found or the maximum number of generations is reached
 ```
 
-Input the sudoku board you wish to be solved as a 9x9 array in the ga.sudokuGA() function as shown in the main.py file.
+Call an instance of GeneticAlgorithm class with a sudoku board array as input.
 Note that two example boards are already included in the sudoku_examples.py file, one easy and one hard, along with their respective solutions. 
-You can also choose to see a continous plot of the best fitness or/and see a final plot when running the algorithm. 
-In both plots the parameters for the algorithm is included.
+You can also choose to see a continous plot of the best fitness.
+
+Example:
 
 ```
-ga.sudokuGA(sudoku_examples.easy, show_continous_plot=True, show_final_plot=True, print_final_board=True)
+ga = GeneticAlgorithm()
+puzzle = np.array([
+        [5,3,0,0,7,0,0,0,0],
+        [6,0,0,1,9,5,0,0,0],
+        [0,9,8,0,0,0,0,6,0],
+        [8,0,0,0,6,0,0,0,3],
+        [4,0,0,8,0,3,0,0,1],
+        [7,0,0,0,2,0,0,0,6],
+        [0,6,0,0,0,0,2,8,0],
+        [0,0,0,4,1,9,0,0,5],
+        [0,0,0,0,8,0,0,7,9]
+        ])
+ga(puzzle, show_live_plot=True)
 ```
 
-If you wish to change the parameters you can do so in the definition of the sudokuGA funtion in GeneticAlgorithmSudokuSolver.py.
-The following are the standard parameters I have found to work best for me, but of course there is ample room for improvement so feel free
-to change them.
+The parameters for the algorithm can be changes in the init.
+The following parameters are the ones I have found to work best.
 
 ```
-population_size = 20000
-selection_rate = 0.2
-random_selection_rate = 0.1
-max_generations = 1000
-individual_mutation_rate = 0.45
-cell_mutation_rate = 0.005
-restart_after_n_generations = 20
+population_size: int = 10000,
+selection_rate: float = 0.2,
+random_selection_rate: float = 0.0
+max_generations: int = 40000
+individual_mutation_rate: float = 0.25,
+cell_mutation_amount: float = 1,
+restart_after_n_generations: int = 40
 ```
 
 The following video shows a timelapse of the continous plot when solving the preloaded easy sudoku board with
@@ -53,20 +65,4 @@ where the following solution was printed:
  [9 6 1 5 3 7 2 8 4]
  [2 8 7 4 1 9 6 3 5]
  [3 4 5 2 8 6 1 7 9]]
-```
-and the preloaded easy sudoku input was
-```
-easy = [
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
-        ]
-        
-ga.sudokuGA(easy, show_continous_plot=True, show_final_plot=True, print_final_board=True)
 ```

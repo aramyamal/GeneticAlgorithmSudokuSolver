@@ -50,11 +50,8 @@ class StochasticMethods(SudokuMethods):
                         horizontalalignment='left',
                         wrap=False, fontsize=8,
                         bbox ={'facecolor':'white', 'alpha':0.3, 'pad':5})
-        plt.pause(0.001)
+        plt.pause(0.1)
         plt.clf()
-    
-
-    
     
 
 if __name__ == "__main__":

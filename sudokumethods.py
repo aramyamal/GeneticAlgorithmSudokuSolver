@@ -32,7 +32,6 @@ class SudokuMethods:
         # Return indices of duplicates directly
         return indices[duplicate_indices_mask]
 
-
     def get_incorrect_indices(self, puzzle: NDArray[np.int_]) -> NDArray[np.int_]:
         """return all incorrect indices in a sudoku array"""
         incorrect_indices = []
@@ -75,18 +74,29 @@ class SudokuMethods:
         
         # Return the rows in incorrect_indices that do not match any row in fixed_indices
         return incorrect_indices[filter_mask]
-        # if incorrect_indices.size == 0:
-        #     return np.array([], dtype=int)
-        # else:
-        #     mask = (incorrect_indices[:, None] == fixed_indices).all(-1)
-        #     filter_mask = ~mask.any(axis=1)
-        #     return incorrect_indices[filter_mask]
     
     def generic_loss_function(self, puzzle: NDArray[np.int_], fixed_indices: NDArray[np.int_]) -> int:
         """generic loss function for sudoku puzzle that checks for number of incorrect indices in a puzzle"""
         incorrect_indices = self.get_incorrect_indices(puzzle)
         incorrect_indices = self.remove_fixed_indices_from_incorrect_indices(incorrect_indices, fixed_indices)
         return incorrect_indices.shape[0]
+    
+    def print_puzzle(self, puzzle: NDArray[np.int_]) -> None:
+        """print the sudoku puzzle"""
+        for i in range(9):
+            if i % 3 == 0 and i != 0:
+                # Print a horizontal separator line
+                print("------+-------+------")
+            
+            # Print each row with vertical separators
+            row_format = ""
+            for j in range(9):
+                if j % 3 == 0 and j != 0:
+                    row_format += "| "
+                row_format += f"{puzzle[i, j]} "
+            
+            # Print the formatted row with row index
+            print(f"{row_format.strip()}")
 
 if __name__ == '__main__':
     puzzle = np.array([
