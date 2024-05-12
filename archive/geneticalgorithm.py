@@ -35,7 +35,8 @@ class GeneticAlgorithm(StochasticMethods):
 
         # start live plot
         if show_live_plot:  
-            plt.ion()   
+            plt.ion()  
+            plt.figure(figsize=(10, 5)) 
 
         #initialize variables
         new_selection_rate_amount = int(self.selection_rate * self.population_size)
@@ -127,7 +128,6 @@ class GeneticAlgorithm(StochasticMethods):
             print(solution)
             plt.ioff()
             self.plot_loss(fitness_over_time, xlabel='generation', ylabel='fitness', population_size=self.population_size, selection_rate=self.selection_rate, random_selection_rate=self.random_selection_rate, children_rate_= 1 - self.selection_rate - self.random_selection_rate, individual_mutation_rate=self.individual_mutation_rate, cell_mutation_amount=self.cell_mutation_amount, best_fitness=fitness_over_time[-1], elapsed_time=time.time() - start_time)
-            plt.savefig('solution.png')
             return solution
 
         else:
@@ -135,7 +135,6 @@ class GeneticAlgorithm(StochasticMethods):
             print(fittest_individual)
             plt.ioff()
             self.plot_loss(fitness_over_time, xlabel='generation', ylabel='fitness', population_size=self.population_size, selection_rate=self.selection_rate, random_selection_rate=self.random_selection_rate, children_rate_= 1 - self.selection_rate - self.random_selection_rate, individual_mutation_rate=self.individual_mutation_rate, cell_mutation_amount=self.cell_mutation_amount, best_fitness=fitness_over_time[-1], elapsed_time=time.time() - start_time)
-            plt.savefig('best_solution.png')
             return fittest_individual
 
     def create_first_generation(self, puzzle: NDArray[np.int_], population_size: int) -> NDArray[np.int_]:
