@@ -36,7 +36,7 @@ puzzle = np.array([
 ga(puzzle, show_live_plot=True)
 ```
 
-The parameters for the algorithm can be changes in the init.
+The parameters for the algorithm can be changed in the init.
 The following parameters are the ones I have found to work best.
 
 ```
@@ -49,10 +49,10 @@ cell_mutation_amount: float = 1,
 restart_after_n_generations: int = 40
 ```
 
-The following video shows a timelapse of the continous plot when solving the preloaded easy sudoku board with
+The following video shows a live continous plot when solving the preloaded easy sudoku board with
 the parameters above,
 
-https://user-images.githubusercontent.com/116388893/235634335-00561fae-b327-4eb1-9f51-0c79d8440d2e.mp4
+https://github.com/aramyamal/GeneticAlgorithmSudokuSolver/assets/116388893/a2b5f39b-b322-4659-980e-c317210f9550
 
 where the following solution was printed:
 ```
