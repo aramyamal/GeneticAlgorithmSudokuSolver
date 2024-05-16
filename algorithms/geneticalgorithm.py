@@ -5,6 +5,7 @@ from time import time
 
 class GeneticAlgorithm(SudokuAlgorithm):
     def __init__(self,
+                    so: StochasticOperations = StochasticOperations(),
                     population_size: int = 10000,
                     selection_rate: float = 0.2,
                     max_generations: int = 40000,
@@ -12,7 +13,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
                     restart_after_n_generations: int = 40,
                     ):
         
-        self.so = StochasticOperations() # Dependency injection
+        self.so = so # Dependency injection
 
         self.population_size = population_size
         self.selection_rate = selection_rate

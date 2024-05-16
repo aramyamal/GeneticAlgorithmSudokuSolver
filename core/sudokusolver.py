@@ -26,7 +26,7 @@ class SudokuSolver:
             for j in range(9):
                 if j % 3 == 0 and j != 0:
                     row_format += "| "
-                row_format += f"{puzzle[i, j]} "
+                row_format += f"{puzzle[i, j] if puzzle[i, j] != 0 else '.'} "
             
             # Print the formatted row with row index
             print(f"{row_format.strip()}")

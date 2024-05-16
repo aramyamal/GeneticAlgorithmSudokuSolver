@@ -6,12 +6,13 @@ from time import time
 class SimulatedAnnealing(SudokuAlgorithm):
     def __init__(
             self,
+            so: StochasticOperations = StochasticOperations(),
             final_temperature: float = 0.01,
             end_after_n_restarts: int = 10,
-            restart_after_n_reheats: int = 5,
+            restart_after_n_reheats: int = 3,
             ):
         
-        self.so = StochasticOperations() # Dependency injection
+        self.so = so # Dependency injection
 
         self.final_temperature = final_temperature
         self.end_after_n_restarts = end_after_n_restarts
