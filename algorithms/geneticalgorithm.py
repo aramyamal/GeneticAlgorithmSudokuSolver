@@ -6,11 +6,11 @@ from time import time
 class GeneticAlgorithm(SudokuAlgorithm):
     def __init__(self,
                     so: StochasticOperations = StochasticOperations(),
-                    population_size: int = 10000,
-                    selection_rate: float = 0.2,
-                    max_generations: int = 40000,
-                    individual_mutation_rate: float = 0.25,
-                    restart_after_n_generations: int = 40,
+                    population_size: int = 500,
+                    selection_rate: float = 0.5,
+                    max_generations: int = 20000,
+                    individual_mutation_rate: float = 0.65,
+                    restart_after_n_generations: int = 100,
                     ):
         
         self.so = so # Dependency injection
@@ -41,7 +41,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
         # Create initial population
         solution = np.empty((9, 9), dtype=np.int8)
         fixed_indices = self.so.get_fixed_indices(sudoku)
-        current_generation = self.so.create_initial_population(puzzle = sudoku, population_size = self.population_size)
+        current_generation = self.so.create_initial_population_bounded(puzzle = sudoku, population_size = self.population_size)
 
         # Main loop
         while iteration < self.max_generations and not found_solution:
@@ -67,7 +67,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
             # Check if we are stuck in a local minima
             if local_minima_loop_count >= self.restart_after_n_generations:
                 print(f"\nStuck in local minima for {local_minima_loop_count} generations at iteration {iteration}. Restarting population.")
-                current_generation = self.so.create_initial_population(sudoku, self.population_size)
+                current_generation = self.so.create_initial_population_bounded(sudoku, self.population_size)
                 local_minima_loop_count = 0
                 continue
             
@@ -79,10 +79,12 @@ class GeneticAlgorithm(SudokuAlgorithm):
 
             # Create children from the current generation and add to the next generation
             children = self.so.create_children(current_generation, children_amount)
+            # # Mutate children
+            # children = self.so.mutate_sudoku_population_bounded(children, fixed_indices, self.individual_mutation_rate)
             next_generation[selection_amount:] = children
 
             # Mutate the next generation
-            next_generation = self.so.mutate_sudoku_population(next_generation, fixed_indices, self.individual_mutation_rate)
+            next_generation = self.so.mutate_sudoku_population_bounded(next_generation, fixed_indices, self.individual_mutation_rate)
 
             # Update current generation
             current_generation = next_generation
@@ -91,7 +93,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
             iteration += 1
 
             # Print progress
-            if iteration % 5 == 0:
+            if iteration % 200 == 0:
                 print("-----------------------------")
                 print(f"current generation: {iteration} \
                     \ncurrent best fitness: {self.fitness_history[-1]} \

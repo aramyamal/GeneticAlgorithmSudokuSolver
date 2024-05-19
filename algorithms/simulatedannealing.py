@@ -30,7 +30,7 @@ class SimulatedAnnealing(SudokuAlgorithm):
 
         fixed_indices = self.so.get_fixed_indices(sudoku)
 
-        # Calculate initial temperature, which is the standard deviation of the energy
+        # Calculate initial temperature, which is proportional to the standard deviation of the energy
         random_solutions = self.so.create_initial_population_bounded(sudoku, 100)
         random_solutions_energies = self.so.get_fitness(random_solutions, fixed_indices)
         initial_temperature = np.std(random_solutions_energies) / 3
