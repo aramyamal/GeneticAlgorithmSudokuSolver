@@ -7,7 +7,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
     def __init__(self,
                     so: StochasticOperations = StochasticOperations(),
                     population_size: int = 500,
-                    selection_rate: float = 0.5,
+                    selection_rate: float = 0.25,
                     max_generations: int = 20000,
                     individual_mutation_rate: float = 0.65,
                     restart_after_n_generations: int = 100,
