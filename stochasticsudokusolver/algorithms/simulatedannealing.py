@@ -1,5 +1,5 @@
-from core.utils.stochasticoperations import StochasticOperations
-from algorithms.sudokualgorithm import SudokuAlgorithm
+from stochasticsudokusolver.core.utils.stochasticoperations import StochasticOperations
+from stochasticsudokusolver.algorithms.sudokualgorithm import SudokuAlgorithm
 import numpy as np
 from time import time
 
@@ -74,7 +74,7 @@ class SimulatedAnnealing(SudokuAlgorithm):
                 # Calculate new population energies
                 new_energies = self.so.get_fitness(new_population, fixed_indices)
 
-                # Accept or reject mebers of the new population
+                # Accept or reject members of the new population according to the Metropolis criterion
                 current_populaion, current_energies = self.so.accept_population(current_populaion, new_population, 
                                                               current_energies, new_energies, temperature)
 

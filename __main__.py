@@ -1,9 +1,7 @@
 # File to solve sudoku in command line
 import numpy as np
-from algorithms.geneticalgorithm import GeneticAlgorithm
-from algorithms.simulatedannealing import SimulatedAnnealing
-from algorithms.saga import SAGA
-from core.sudokusolver import SudokuSolver
+from stochasticsudokusolver import GeneticAlgorithm, SimulatedAnnealing, SAGA, BacktrackAlgorithm
+from stochasticsudokusolver import SudokuSolver
 
 if __name__ == "__main__":
     print('Sudoku Solver')
@@ -29,7 +27,9 @@ if __name__ == "__main__":
             print('-------------')    
             print("What difficulty of puzzle?")
             print('1. Easy')
-            print('2. Hard')
+            print('2. Medium')
+            print('3. Hard')
+            print('4. Evil')
             while correct_input == False:
                 choice = int(input('Enter choise: '))
                 if choice == 1:
@@ -45,7 +45,22 @@ if __name__ == "__main__":
                     [0,0,0,0,8,0,0,7,9]
                     ])
                     correct_input = True
-                if choice == 2:
+
+                elif choice == 2:
+                    puzzle = np.array([
+                    [0, 6, 7, 0, 8, 2, 9, 5, 0],
+                    [1, 0, 0, 6, 0, 5, 7, 0, 8],
+                    [0, 0, 8, 7, 1, 0, 0, 6, 0],
+                    [0, 5, 0, 0, 7, 0, 0, 9, 0],
+                    [0, 7, 9, 0, 5, 0, 0, 0, 6],
+                    [2, 0, 0, 8, 0, 6, 0, 7, 0],
+                    [0, 0, 2, 0, 6, 0, 5, 8, 0],
+                    [9, 0, 6, 5, 0, 8, 0, 3, 7],
+                    [0, 0, 5, 0, 0, 7, 6, 1, 0]
+                    ])
+                    correct_input = True
+                
+                elif choice == 3:
                     puzzle = np.array([
                     [0, 0, 6, 1, 0, 0, 0, 0, 8], 
                     [0, 8, 0, 0, 9, 0, 0, 3, 0], 
@@ -58,6 +73,21 @@ if __name__ == "__main__":
                     [1, 0, 0, 0, 0, 2, 5, 0, 0]
                     ])
                     correct_input = True
+                
+                elif choice == 4:
+                    puzzle = np.array([
+                    [3, 0, 0, 1, 0, 0, 2, 6, 0],
+                    [1, 9, 0, 0, 0, 8, 0, 0, 3],
+                    [0, 0, 5, 6, 0, 3, 1, 0, 0],
+                    [0, 3, 0, 0, 9, 0, 0, 2, 5],
+                    [5, 1, 0, 2, 0, 0, 0, 3, 0],
+                    [9, 6, 2, 0, 0, 0, 0, 0, 1],
+                    [0, 0, 1, 9, 6, 0, 3, 0, 0],
+                    [8, 0, 3, 0, 1, 0, 0, 0, 6],
+                    [0, 2, 0, 0, 0, 5, 0, 0, 4]
+                    ])
+                    correct_input = True
+
                 else:
                     print('Please enter a valid choice. What difficulty of puzzle?')
         else:
@@ -71,7 +101,8 @@ if __name__ == "__main__":
     print('1. Genetic Algorithm')
     print('2. Simulated Annealing')
     print('3. SAGA (Simulated Annealing Genetic Algorithm)')
-    print('4. Exit')
+    print('4. Backtracking algorithm (brute force)')
+    print('5. Exit')
     choice = int(input('Enter choice: '))
     if choice == 1:
         algorithm = GeneticAlgorithm()
@@ -80,6 +111,8 @@ if __name__ == "__main__":
     elif choice == 3:
         print('SAGA is not implemented yet. Exiting...')
         exit()
+    elif choice == 4:
+        algorithm = BacktrackAlgorithm()
     else:
         exit()
     print('Solving...')

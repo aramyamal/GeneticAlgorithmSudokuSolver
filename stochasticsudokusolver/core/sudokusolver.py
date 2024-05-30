@@ -1,4 +1,4 @@
-from algorithms.sudokualgorithm import SudokuAlgorithm
+from stochasticsudokusolver.algorithms.sudokualgorithm import SudokuAlgorithm
 import numpy as np
 
 class SudokuSolver:

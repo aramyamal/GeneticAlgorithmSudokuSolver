@@ -1,5 +1,5 @@
-from core.utils.stochasticoperations import StochasticOperations
-from algorithms.sudokualgorithm import SudokuAlgorithm
+from stochasticsudokusolver.core.utils.stochasticoperations import StochasticOperations
+from stochasticsudokusolver.algorithms.sudokualgorithm import SudokuAlgorithm
 import numpy as np
 from time import time
 
@@ -10,7 +10,7 @@ class GeneticAlgorithm(SudokuAlgorithm):
                     selection_rate: float = 0.25,
                     max_generations: int = 20000,
                     individual_mutation_rate: float = 0.65,
-                    restart_after_n_generations: int = 100,
+                    restart_after_n_generations: int = 200,
                     ):
         
         self.so = so # Dependency injection
